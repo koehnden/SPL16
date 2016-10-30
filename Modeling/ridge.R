@@ -1,6 +1,6 @@
-######################## Ridge Regression ########################################
-# This script performs repeated nested cross-validation to tune and estimate the performance of
-# Ridge Regression. 
+################################# Ridge Regression ######################################################################
+# This script performs repeated nested cross-validation to tune and estimate the performance of Ridge Regression. 
+# Best parameter (here just lambda) is between 0.035 and 0.04
 library(caret)
 #library(doMC)
 #registerDoMC(cores = 4)  # only available in linux
@@ -17,10 +17,9 @@ train <- cbind(X_com[1:length(y),],y)
 ########## perform repeated nested cv
 # set cv parameter
 t_outer <- 5 # repetitions on the outer loop
-k_outer <- 5 # fold of the outer cv loop
-t_inner <- 5 # repetition on inner loop (here caret does it)
+k_outer <- 10 # fold of the outer cv loop
+t_inner <- 10 # repetition on inner loop (here caret does it)
 k_inner <- 5 # folds on the inner cv loop
-outer_iteration <- t_outer * k_outer 
 
 # create Grid for GridSearch to tune hyperparameter (here just lambda)
 ridgeGrid <-  expand.grid(lambda = seq(0.025,0.075,0.005)) 
@@ -41,7 +40,7 @@ best_parameter <- matrix(0, nrow = k_outer, ncol = t_outer)
 for(t_1 in 1:t_outer){
   folds_outer <- sample(rep(1:k_outer, length.out = nrow(train)))
   cat("\n")
-  cat("outer repetition", t_1, "out of", t_inner)
+  cat("outer repetition", t_1, "out of", t_outer)
   # start k fold outer loop
   for(k_1 in 1:k_outer){
     # random split of the data in k_outer folds
@@ -55,7 +54,7 @@ for(t_1 in 1:t_outer){
                       method = 'ridge',  # method
                       trControl = ctrl,  # evaluatio method (repeated CV)
                       tuneGrid = ridgeGrid, # grid
-                      selectionFunction = oneSE, # oneSE to choose simplest model in condifidence intervall (best alternative) 
+                      selectionFunction = best, # oneSE to choose simplest model in condifidence intervall (best alternative) 
                       metric = "RMSE"  # error metric
                       # verbose = True # print steps
     )
@@ -66,7 +65,6 @@ for(t_1 in 1:t_outer){
     # compute inner fold rmse
     rmse_temp[k_1,t_1] <- rmse_log(validation$y,yhat)
     # print temporary results
-    outer_iteration <- outer_iteration - 1
     cat("\n")
     cat("best parameter:", best_parameter[k_1,t_1], "RMSE:", rmse_temp[k_1,t_1], 
         "outer fold:", k_1, "out of", k_outer)
@@ -74,8 +72,7 @@ for(t_1 in 1:t_outer){
 }#end t_outer
 
 # get average prediction error and sd
-rmse_mean <- colMeans(rmse_temp); mean(rmse_mean)
+rmse_mean <- colMeans(rmse_temp, na.rm = T); mean(rmse_mean) 
 rmse_sd <- apply(rmse_temp,2,sd); mean(rmse_sd)
-mean(rmse_mean) + 1.96 * mean(rmse_sd)
 # show best parameter choosen by the inner repeated cv 
 table(best_parameter)
