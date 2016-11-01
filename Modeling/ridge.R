@@ -5,11 +5,33 @@ library(caret)
 #library(doMC)
 #registerDoMC(cores = 4)  # only available in linux
 
-# run Data Cleaning Scripts
+# set WD
 setwd("~/SPL16")
-source("~/SPL16/Data_Cleaning/convert_categoricals.R")
-source("~/SPL16/Feature_Selection/delete_nearzero_variables.R") # Put ouT X_com as the cleaned Feature Matrix
-source("~/SPL16/utils/performanceMetrics.R") # get performance Metric functions
+##Oleksiy WD
+#setwd("/Users/d065820/Documents/HU_Belrin/SPL/SPL16/Data")
+
+###########################Load Data Cleaning Scripts
+source("../Data_Cleaning/convert_categoricals.R")
+source("../Data_Cleaning/impute_data.R")
+source("../Feature_Selection/delete_nearzero_variables.R") # Put ouT X_com as the cleaned Feature Matrix
+source("../utils/performanceMetrics.R") # get performance Metric functions
+
+#load data
+train <- read.csv("ames_train.csv", header=T)
+test <- read.csv("ames_test.csv", header=T)
+
+# split target variable and feature matrix
+y <- train[,81] # target variable SalePrice
+X <- train[,-81] # feature matrix without target variable
+# merge test and train features to get the complete feature matrix
+X_com <- rbind(X,test)
+##########
+
+
+X_imputed <- quick_imputation(X_com)
+X_encoded <- data.frame(lapply(X_imputed, cat_to_dummy))
+X_com <- delect_nz_variable(X_encoded)
+
 
 # remerge train data 
 train <- cbind(X_com[1:length(y),],y)

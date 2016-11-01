@@ -38,14 +38,13 @@ quick_imputation <- function(X){
   temp <- data.frame(temp, stringsAsFactors = FALSE)
   temp <- as.data.frame(lapply(temp, impute_variable))
   return(temp)
-  
 }
 
 ## usage
 # apply quick_impute function to the complete feature matrix X_com
 # run load_ames_data script
-source("~/SPL16/load_ames_data.R")
-X_imputed <- quick_imputation(X_com)
+#source("../load_ames_data.R")
+#X_imputed <- quick_imputation(X_com)
 ## check if function works
 #sapply(X_imputed, function(x) sum(is.na(x)))
 #str(X_imputed)

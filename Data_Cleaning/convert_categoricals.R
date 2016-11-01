@@ -29,6 +29,8 @@ cat_to_dummy <- function(x, vif_threshold = 10){
 
 ## usage 
 # run impute_data script
-source("~/SPL16/Data_Cleaning/impute_data.R")
+
+#source("../Data_Cleaning/impute_data.R")
+#source("~/SPL16/Data_Cleaning/impute_data.R")
 # apply cat_to_dummy on the whole data set
-X_encoded <- data.frame(lapply(X_imputed, cat_to_dummy))
+#X_encoded <- data.frame(lapply(X_imputed, cat_to_dummy))
