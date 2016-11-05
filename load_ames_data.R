@@ -1,11 +1,8 @@
 ##################### load ames housing data #######################
 
-# set working directory and load data
-
-setwd("/Users/d065820/Documents/HU_Belrin/SPL/SPL16/Data")
 #setwd("~/SPL16/Data")
-train <- read.csv("ames_train.csv", header=T)
-test <- read.csv("ames_test.csv", header=T)
+train <- read.csv("Data/ames_train.csv", header=T)
+test <- read.csv("Data/ames_test.csv", header=T)
 
 # split target variable and feature matrix
 y <- train[,81] # target variable SalePrice
