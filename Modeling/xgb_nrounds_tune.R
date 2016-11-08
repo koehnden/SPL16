@@ -42,7 +42,7 @@ tune_nrounds <- function(xgb_parameters, feature_matrix, labels, max_nrounds = 1
   cat("\n")
   cat("Average optimal round is:", mean(optimal_rounds), "with a Standard Dev of:", sd(optimal_rounds))
   # save all training results as csv file xgb_nrounds_train_repetition.csv
-  write.csv(tuning_results, file = paste(result_path, t,".csv", sep="_"))
+  write.csv(xgb_cv$dt, file = paste(result_path, t,".csv", sep="_"))
   # return whole result
   return(optimal_rounds)
 }
