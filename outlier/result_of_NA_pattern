@@ -1,0 +1,55 @@
+\documentclass{article}
+\begin{document}
+	
+
+
+% latex table generated in R 3.3.1 by xtable 1.8-2 package
+% Tue Nov  8 15:17:40 2016
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrrrrrrrrr}
+  \hline
+ & 2267 &  469 &   16 &  146 &    6 &    1 &   11 &    1 &    1 &    1 & V11 \\ 
+  \hline
+Id &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  MSSubClass &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  LotArea &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  OverallQual &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  OverallCond &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  YearBuilt &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  YearRemodAdd &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  X1stFlrSF &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  X2ndFlrSF &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  LowQualFinSF &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  GrLivArea &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  FullBath &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  HalfBath &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  BedroomAbvGr &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  KitchenAbvGr &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  TotRmsAbvGrd &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  Fireplaces &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  WoodDeckSF &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  OpenPorchSF &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  EnclosedPorch &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  X3SsnPorch &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  ScreenPorch &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  PoolArea &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  MiscVal &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  MoSold &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  YrSold &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 \\ 
+  BsmtFinSF1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 &   1 \\ 
+  BsmtFinSF2 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 &   1 \\ 
+  BsmtUnfSF &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 &   1 \\ 
+  TotalBsmtSF &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 &   1 \\ 
+  GarageCars &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 &   1 &   1 \\ 
+  GarageArea &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   1 &   0 &   1 &   1 \\ 
+  BsmtFullBath &   1 &   1 &   1 &   1 &   1 &   0 &   1 &   1 &   1 &   0 &   2 \\ 
+  BsmtHalfBath &   1 &   1 &   1 &   1 &   1 &   0 &   1 &   1 &   1 &   0 &   2 \\ 
+  MasVnrArea &   1 &   1 &   0 &   1 &   0 &   1 &   1 &   0 &   1 &   1 &  23 \\ 
+  GarageYrBlt &   1 &   1 &   1 &   0 &   1 &   1 &   0 &   0 &   0 &   1 & 159 \\ 
+  LotFrontage &   1 &   0 &   1 &   1 &   0 &   1 &   0 &   1 &   1 &   1 & 486 \\ 
+   &   0 &   1 &   1 &   1 &   2 &   2 &   2 &   2 &   3 &   6 & 678 \\ 
+   \hline
+\end{tabular}
+\end{table}
+\end{document}
