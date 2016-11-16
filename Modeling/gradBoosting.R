@@ -11,18 +11,16 @@ library(Matrix)
 source("load_ames_data.R")
 source("utils/quick_preprocessing.R") # to perform the naive preprocessing step implemented in the beginning
 source("utils/performanceMetrics.R")  # to get performance metrics 
-#source("Modeling/xgb_nrounds_tune") # to tune nrounds while holding other parameters fixed
 
 # set labels and exclude them from the training set
 y <- train$y
 train <- train[,-c(1,ncol(train))]
 
-# save result path
-result_path <- "Modeling/Results/xgboost/tree_specific/xgb_treespecific_train"
+# save result path (change according to experiment here: input date is from quick preprocessing function)
+result_path <- "Modeling/Results/xgboost/tree_specific/quick_preprocessing/xgb_treespecific_train"
 
 ########## perform repeated nested cv
 # set cv parameter
-t_outer <- 5   # repetitions on the outer loop (not implemented)
 k_outer <- 10  # fold of the outer cv loop 
 k_inner <- 5   # folds on the inner cv loop
 
@@ -31,11 +29,11 @@ k_inner <- 5   # folds on the inner cv loop
 #                           colsample_bytree: variable considered at each split
 #                           subsample: size of the bagging bootstrap sample
 
-nrounds_fixed <- 300 # number of trees: set depending on the learning rate (lower learning rate --> higher nrounds) 
+nrounds_fixed <- 1000 # number of trees: no need for tuning since early.stopping is possible 
 eta_fixed <- 0.025 # learning rate (fixed for now)
-treeSpecificGrid <-  expand.grid(max_depth = seq(2,10,2), 
+treeSpecificGrid <-  expand.grid(max_depth = seq(4,10,2), 
                                  gamma = 0, # gamma seems to be not be crucial (we do not tune it)
-                                 subsample = seq(0.4,1,0.2), 
+                                 subsample = seq(0.2,0.8,0.2), 
                                  colsample_bytree = seq(0.1,0.85,0.15)
                                  )
 # samplesize could be inspected as well
@@ -54,8 +52,6 @@ parameter_names <- c("max_depth",
 # create empty vector/matrix to save best results
 rmse_temp <- matrix(0, nrow = k_inner, ncol = k_outer)
 kbest <- 5 # how many models to be run in the outer loop
-results_outer <- matrix(0, nrow = k_outer, ncol = kbest)
-colnames(result_outer) <- c("1st","2nd","3rd","4th","5th")
 best_parameter <- matrix(0, nrow = k_inner, ncol = numOfParameter + 1) 
 colnames(best_parameter) <- c("rmse",parameter_names)
 result_list <- lapply(seq_len(k_outer), function(X) best_parameter)
@@ -73,6 +69,7 @@ for(k_1 in 1:k_outer){
   # convert for data into a format xgb.train can handle for the outer training
   dtrain_outer <- xgb.DMatrix(data = as.matrix(training_outer), label=y_training_outer)
   dvalidation_outer <- xgb.DMatrix(data = as.matrix(validation_outer), label=y_validation_outer)
+  watchlist_outer <- list(eval = dvalidation_outer, train = dtrain_inner)
   cat("\n")
   cat("start outer nested cv loop", k_1, "out of", k_outer)
   # draw random integers for the k-folds
@@ -95,6 +92,7 @@ for(k_1 in 1:k_outer){
     # convert for data into a format xgb.train can handle
     dtrain_inner <- xgb.DMatrix(data = as.matrix(training_inner), label=y_training_inner)
     dvalidation_inner <- xgb.DMatrix(data = as.matrix(validation_inner), label=y_validation_inner)
+    watchlist_inner <- list(eval = dvalidation_inner, train = dtrain_inner)
     # start GridSearch loop 
     for(i in 1:nrow(treeSpecificGrid)){
       # determine arbitrary xgboost parameters in a list
@@ -112,8 +110,10 @@ for(k_1 in 1:k_outer){
                           data =  dtrain_inner,
                           booster = "gbtree",
                           nround = nrounds_fixed,    #number of trees (set accordingly to tune_nrounds function) 
-                          verbose = TRUE,
-                          objective = "reg:linear"
+                          verbose = 1,
+                          early.stop.round = 25,
+                          objective = "reg:linear",
+                          watchlist = watchlist_inner
                           )
       # predict SalePrice
       yhat_inner <- predict(xgbFit_inner, newdata = dvalidation_inner)
@@ -129,15 +129,6 @@ for(k_1 in 1:k_outer){
     best_results <- tuning_results[idx_kbest,]
     # save best results
     rmse_temp[k_2,k_1] <- best_results$rmse[1] # best rmse
-    # print temporary results of tuning
-    cat("\n")
-    cat("Best RMSE:",  best_results$rmse[1],
-        "max_depth:",  best_results$max_depth[1],
-        "gamma:",      best_results$gamma[1],
-        "colsample_bytree:", best_results$colsample_bytree[1],
-        "subsample:", best_results$subsample[1],
-        "inner fold:", k_2, "out of", k_inner[1]
-    )
   }#end inner cv
   # fill result list with the best parameter 
   result_list[[k_1]] <- best_results
@@ -154,20 +145,23 @@ for(k_1 in 1:k_outer){
       maximize = FALSE
     )
     # fit the xgboost for outer training
-    xgbFit_outer <- xgb.train(params = xgb_paramters,  # list of parameter previously specified
+    xgbFit_outer <- xgb.train(params = xgb_paramters,    # list of parameter previously specified
                               data =  dtrain_outer,
                               booster = "gbtree",
-                              nround = nrounds_fixed,    #number of trees (set accordingly to tune_nrounds function) 
-                              verbose = TRUE,
-                              objective = "reg:linear"
+                              nround = nrounds_fixed,    # number of trees (set accordingly to tune_nrounds function) 
+                              verbose = 1,
+                              early.stop.round = 25,     
+                              objective = "reg:linear",
+                              watchlist = watchlist_outer
     )
     # predict SalePrice
     yhat_outer <- predict(xgbFit_outer, newdata = dvalidation_outer)
     # fill the first column of this matrix with the rmse results (of the log outputs)
     validation_error_outer <- rmse_log(y_validation_outer, yhat_outer)
-    write.csv(results_outer, file = paste(result_path,k_2,model,"bestModels.csv", sep="_"))
     result_list[[k_1]][model,1] <- validation_error_outer
     # save all training results as csv file (fold_k_reptetion_t)
+    write.csv(result_list[[k_1]], file = paste(result_path,k_2,model,"bestModels.csv", sep="_"))
   }# end outer training
 }#end outer cv loop
+# print result list
 print(result_list) 
