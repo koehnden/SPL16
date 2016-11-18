@@ -11,7 +11,8 @@ library(Matrix)
 source("load_ames_data.R")
 source("utils/quick_preprocessing.R") # to perform the naive preprocessing step implemented in the beginning
 source("utils/performanceMetrics.R")  # to get performance metrics 
-
+# get preprocessed data
+train <- naive_preprocessing(X_com,y)
 # set labels and exclude them from the training set
 y <- train$y
 train <- train[,-c(1,ncol(train))]
@@ -23,6 +24,7 @@ result_path <- "Modeling/Results/xgboost/tree_specific/quick_preprocessing/xgb_t
 # set cv parameter
 k_outer <- 10  # fold of the outer cv loop 
 k_inner <- 5   # folds on the inner cv loop
+kbest <- 5 
 
 # create Grid for GridSearch to tune hyperparameter 
 # Tree specific Parameters: maxnodes: longest path of a single tree (decreased performance)
@@ -121,10 +123,10 @@ for(k_1 in 1:k_outer){
       validation_error_inner <- rmse_log(y_validation_inner, yhat_inner)
       tuning_results[i,1] <- validation_error_inner
       # save all training results as csv file (fold_k_reptetion_t)
-      write.csv(tuning_results, file = paste(result_path, k_2,k_1,".csv", sep="_"))
+      write.csv(tuning_results, file = paste(result_path, k_1,k_2,".csv", sep="_"))
     }#end GridSearch
     # find the index of the 5 best models with the smallest rmse 
-    idx_kbest <- order(tuning_results$rmse)[1:5]
+    idx_kbest <- order(tuning_results$rmse)[1:kbest]
     # get rmse and the parameter of the best model
     best_results <- tuning_results[idx_kbest,]
     # save best results
@@ -145,7 +147,7 @@ for(k_1 in 1:k_outer){
       maximize = FALSE
     )
     # fit the xgboost for outer training
-    xgbFit_outer <- xgb.train(params = xgb_paramters,    # list of parameter previously specified
+    xgbFit_outer <- xgb.train(params = xgb_paramters,    # list2 of parameter previously specified
                               data =  dtrain_outer,
                               booster = "gbtree",
                               nround = nrounds_fixed,    # number of trees (set accordingly to tune_nrounds function) 
@@ -159,9 +161,13 @@ for(k_1 in 1:k_outer){
     # fill the first column of this matrix with the rmse results (of the log outputs)
     validation_error_outer <- rmse_log(y_validation_outer, yhat_outer)
     result_list[[k_1]][model,1] <- validation_error_outer
-    # save all training results as csv file (fold_k_reptetion_t)
-    write.csv(result_list[[k_1]], file = paste(result_path,k_2,model,"bestModels.csv", sep="_"))
   }# end outer training
 }#end outer cv loop
 # print result list
 print(result_list) 
+
+# save results of the outer loop
+for(i in 1:length(result_list)){
+  # save all training results as csv file (fold_k_reptetion_t)
+  write.csv(result_list[[i]], file = paste(result_path,i,"bestModels.csv", sep="_"))
+}
