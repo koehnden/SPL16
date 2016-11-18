@@ -42,5 +42,6 @@ scale_data <- function(X_no_outliers, scale_method = "min_max"){
   }
 }
 
+
 #X_imputed <- read.csv("Data/ames_imputed_mice.csv")
 #X_scaled <- scale_data(X_imputed, scale_method = "gaussian")
