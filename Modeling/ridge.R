@@ -8,9 +8,9 @@ source("load_ames_data.R")
 source("utils/quick_preprocessing.R") # to perform the naive preprocessing step implemented in the beginning
 source("utils/performanceMetrics.R")  # to get performance metrics 
 # get preprocessed data
-train <- naive_preprocessing(X_com,y)
+train <- basic_preprocessing(X_com,y)$train
 # save result path (change according to experiment here: input date is from quick preprocessing function)
-result_path <- "Modeling/Results/ridge/quick_preprocessing/"
+result_path <- "Modeling/Results/ridge/basic_preprocessing/"
 # set cv parameter
 t_outer <- 5 # repetitions on the outer loop
 k_outer <- 10 # fold of the outer cv loop
@@ -18,7 +18,7 @@ t_inner <- 5 # repetition on inner loop (here caret does it)
 k_inner <- 5 # folds on the inner cv loop
 
 # create Grid for GridSearch to tune hyperparameter (here just lambda)
-ridgeGrid <-  expand.grid(lambda = seq(0.005,0.075,0.005 )) 
+ridgeGrid <-  expand.grid(lambda = seq(0.01,1,0.05 )) 
 
 # determine evaluation method of the inner cv loop
 ctrl <- trainControl(method = "repeatedcv",

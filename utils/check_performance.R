@@ -5,7 +5,7 @@ library(Matrix)
 library(xgboost)
 
 # function to test two different preprocession stategies against each other using ridge regression  
-performance_test_ridge <- function(train_benchmark, train_new, lambda=0.04, k=5, t=10){
+performance_test_ridge <- function(train_benchmark, train_new, lambda=0.03, k=5, t=10){
   # set seed to get same fold for both experiments
   seeds <- seq(1,k*t+1)
   # create Grid 
@@ -42,10 +42,14 @@ performance_test_ridge <- function(train_benchmark, train_new, lambda=0.04, k=5,
   return(list(ridgeFit_new$results,ridgeFit_benchmark$results))
 }
 # usage
-#train_benchmark <- naive_preprocessing(X_com,y)
-#X_imputed <- read.csv("Data/ames_imputed_mice.csv")
-#train_new <- preprocessing(X_imputed,y)
-#performance_test_ridge(train_new=train_new[,-c(1,2)],train_benchmark=train_benchmark)
+source("load_ames_data.R")
+source("utils/quick_preprocessing.R") # to perform the naive preprocessing step implemented in the beginning
+source("utils/performanceMetrics.R")  # to get performance metrics 
+# get preprocessed data
+train_new <- basic_preprocessing(X_com,y)$train
+train_benchmark <- naive_preprocessing(X_com,y)$train
+check_encoding <- performance_test_ridge(train_new=train_new ,train_benchmark=train_benchmark)
+# encoding is not significantly better
 
 
 # function to perform gridSearch and crossvalidation on the xgboost model
