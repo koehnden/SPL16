@@ -1,0 +1,79 @@
+varname,vardes,numNa,varcat,NaImSug
+1stFlrSF, First Floor square feet,0,size_total,no need
+2ndFlrSF, Second floor square feet,0,size_total,no need
+3SsnPorch, Three season porch area in square feet,0,comfort_porch,no need
+Alley, Type of alley access,1369,comfort_alley,"factor, can be ordered or not, NA means no Alley, can be changed to 0"
+BldgType, Type of dwelling,0,comfort_dwelling,"factor, can be ordered or not"
+BsmtCond, General condition of the basement,37,comfort_basement,"ordered factor, NA means that no basement"
+BsmtExposure, Walkout or garden level basement walls,38,comfort_basement,"factor, can be ordered or not, NA may means no basement"
+BsmtFinSF1, Type 1 finished square feet,0,size_basement,no need
+BsmtFinSF2, Type 2 finished square feet,0,size_basement,no need
+BsmtFinType1, Quality of basement finished area,37,comfort_basement,"ordered factor, NA may means no basement"
+BsmtFinType2, Quality of second finished area (if present),38,comfort_basement,"ordered factor, NA may means no basement"
+BsmtFullBath, Basement full bathrooms,0,comfort_basement,"numeric variable, no need"
+BsmtHalfBath, Basement half bathrooms,0,comfort_basement,"numeric variable, no need"
+BsmtQual, Height of the basement,37,comfort_basement,"ordered factor, NA may means no basement"
+BsmtUnfSF, Unfinished square feet of basement area,0,comfort_basement,"numeric variable, no need"
+CentralAir, Central air conditioning,0,comfort_airconditioning,"logical variable, no need"
+Condition1, Proximity to main road or railroad,0,comfort_location,"ordered factor, need to point out the order of the factor"
+Condition2, Proximity to main road or railroad (if a second is present),0,comfort_location,"ordered factor, need find the order, and the relationship with condition 1"
+Electrical, Electrical system,1,comfort_electric,"factor, NA means no electric? can drop of imputed as dummy I think"
+EnclosedPorch, Enclosed porch area in square feet,0,comfort_porch,"numeric variable, no need"
+ExterCond, Present condition of the material on the exterior,0,comfort_exterior,ordered factor
+Exterior1st, Exterior covering on house,0,comfort_exterior,"factor, do not konw ordered or not"
+Exterior2nd, Exterior covering on house (if more than one material),0,comfort_exterior,"factor, do not know ordered or not, correlated with previous"
+ExterQual, Exterior material quality,0,comfort_exterior,ordered factor
+Fence, Fence quality,1179,comfort_fence,"ordered factor, NA may comes from that the house do not have a fence"
+FireplaceQu, Fireplace quality,690,comfort_fireplace,"ordered factor, NA may comes because no fireplace"
+Fireplaces, Number of fireplaces,0,comfort_fireplace,no need
+Foundation, Type of foundation,0,safe_total,"factor, can be ordered or not"
+FullBath, Full bathrooms above grade,0,comfort_bath,"numeric, can also be treated as factor"
+Functional, Home functionality rating,0,comfort_total,ordered factor
+GarageArea, Size of garage in square feet,0,size_garage,"numeric variable, censored at 0"
+GarageCars, Size of garage in car capacity,0,size_garage,"numeric variable, censored at 0, the same meaning with the above variable, but in different measure, I think only this variable is needed in the regression since this variable has little jump in values."
+GarageCond, Garage condition,81,comfort_garage,"ordered factor, NA may comes from no garage in the house"
+GarageFinish, Interior finish of the garage,81,comfort_garage,"factor, do not know ordered or not, NA may come from no garage"
+GarageQual, Garage quality,81,comfort_garage,"ordered factor, NA may come from no garage in the house"
+GarageType, Garage location,81,comfort_garage,"factor, do not know ordered or not, NA may comes from no garage in the house"
+GarageYrBlt, Year garage was built,81,year_garage,"numeric vaiable, NA may comes from no garage"
+GrLivArea, Above grade (ground) living area square feet,0,size_livingarea,no need
+HalfBath, Half baths above grade,0,comfort_bath,"numeric, can also be treated as ordered factor"
+Heating, Type of heating,0,comfort_heat,"factor, can be either ordered of unordered"
+HeatingQC, Heating quality and condition,0,comfort_heat,ordered factor
+HouseStyle, Style of dwelling,0,comfort_total,"factor, can be ordered or no"
+KitchenQual, Kitchen quality,0,comfort_kitchen,ordered factor
+LandContour, Flatness of the property,0,comfort_land,"factor, can be ordered or not"
+LandSlope, Slope of property,0,comfort_lang,"factor, can be ordered or not"
+LotArea, Lot size in square feet,0,size_lot,no need
+LotConfig, Lot configuration,0,comfort_lot,"factor, can be ordered or not"
+LotFrontage, Linear feet of street connected to property,259,comfort_lot,"numeric, do not know why NAs"
+LotShape, General shape of property,0,comfort_lot,"factor, can be ordered or not"
+LowQualFinSF, Low quality finished square feet (all floors),0,comfort_floors,"numeric, censored at 0, smaller the better"
+MasVnrArea, Masonry veneer area in square feet,8,outlook_total,"both NA and 0 exists, do not know why..."
+MasVnrType, Masonry veneer type,8,outlook_total,"both NA and 0 exists, do not know why. and the same NA with "
+MiscFeature, Miscellaneous feature not covered in other categories,1406,comfort_addition,"a lot of NA, can be transformed to dummy variables"
+MiscVal, Value of miscellaneous feature,0,comfort_addition,"this should be coupled with MiscFeature, 0 censored for no feature, think carefully"
+MoSold, Month Sold,0,time_sold,no need
+MSSubClass, The building class,0,comfort_total,no need
+MSZoning, The general zoning classification,0,comfort_total,no need
+Neighborhood, Physical locations within Ames city limits,0,comfort_location,"factor, the description of area where the house belongs, can be ordered or not"
+OpenPorchSF, Open porch area in square feet,0,size_porch,"numeric, censored at 0, no need"
+OverallCond, Overall condition rating,0,comfort_overall,"integer ranging from 1 to 10, likely to be collineared with other variables"
+OverallQual, Overall material and finish quality,0,comfort_overall,"integer ranging from 1 to 10, likely to be collineared with other variables"
+PavedDrive, Paved driveway,0,comfort_driveway,logic variable
+PoolArea, Pool area in square feet,0,comfort_pool,"numeric variable, 0 means no pool, a lot of 0s"
+PoolQC, Pool quality,1453,comfort_pool,"ordered factor, NA means no pool"
+RoofMatl, Roof material,0,comfort_roof,"factor, can be ordered or not"
+RoofStyle, Type of roof,0,comfort_roof,"factor, can be ordered or not"
+SaleCondition, Condition of sale,0,comfort_sale,"factor, likely to be ordered"
+SalePrice, the propertys sale price in dollars. This is the target variable that youre trying to predict.,0,price,target to be predicted
+SaleType, Type of sale,0,comfort_sale,"factor, can be ordered or not"
+ScreenPorch, Screen porch area in square feet,0,comfort_porch,"numeric variable, censored at 0, a lot of 0s"
+Street, Type of road access,0,comfort_location,"factor, likely to be ordered"
+TotalBsmtSF, Total square feet of basement area,0,size_basement,no need
+TotRmsAbvGrd, Total rooms above grade (does not include bathrooms),0,comfort_total,no need
+Utilities, Type of utilities available,0,comfort_utility,"factor, can be ordered or not"
+WoodDeckSF, Wood deck area in square feet,0,comfort_deck,"numeric, censored at 0, 0 means no"
+YearBuilt, Original construction date,0,year_built,no need
+YearRemodAdd, Remodel date,0,year_modify,no need
+YrSold, Year Sold,0,year_sold,no need
