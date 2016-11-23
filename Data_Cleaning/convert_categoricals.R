@@ -10,7 +10,7 @@ library(usdm) # to calculate the stepwise vif score and exclude dummies accordin
 # output : dummy variables (lineary undependent according to the vif score)
 cat_to_dummy <- function(x, vif_threshold = 10){
   # check if variable is not numeric or has less than 5 levels else convert 
-  if(!any(is.numeric(x)) | length(unique(x)) <= 5){
+  if(!any(is.numeric(x)) | length(unique(x)) <= 4){
     # convert into dummy and exclude randomly drawn index
     x <- as.data.frame(dummy(x))
     # get number of column after hot encoding
