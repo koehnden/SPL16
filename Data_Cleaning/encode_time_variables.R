@@ -1,6 +1,6 @@
 ########################## Encode Time Variables  ###########################################################3
 source("utils/visulizations.R")
-library(plotly)
+#library(plotly)
 
 # year sold
 price_per_factor_box(train$YrSold,"Year Sold") 
@@ -15,7 +15,7 @@ unique(X_com$MoSold)
 
 price_per_factor_box(train$YearRemodAdd,"Year Rennovated")
 price_per_factor_plot(train$YearRemodAdd,"Year Rennovated")
-ggplotly()
+#ggplotly()
 unique(X_com$YearRemodAdd)
 # create numeric variable: YrSinceRemodAdd
 
