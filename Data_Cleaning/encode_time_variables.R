@@ -35,6 +35,3 @@ include_quarter_dummies <- function(X_com){
   return(X_com)
 }
 
-  
-  
-  
