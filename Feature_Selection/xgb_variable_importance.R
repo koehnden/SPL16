@@ -35,14 +35,4 @@ xgbFit <- xgb.train(params = xgb_paramters,  # list of parameter previously spec
 
 #train$data@Dimnames[[2]] represents the column names of the sparse matrix.
 importance_matrix <- xgb.importance(colnames(train), model = xgbFit)
-#xgb.plot.importance(importance_matrix[1:25,])
-
-yhat <- predict(validation,xgbFit)
-importance_matrix[nrow(importance_matrix),]$Feature
-
-
-
-
-
-
-
+xgb.plot.importance(importance_matrix)
