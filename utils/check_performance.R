@@ -17,6 +17,7 @@ performance_test_ridge <- function(train_benchmark, train_new, lambda=0.03, k=5,
                        savePredictions = TRUE,
                        seeds = seeds
   )
+  print("start training with the new data...")
   # determine model for data set 1
   ridgeFit_new <- train(y ~., 
                     data = train_new, # exclude Id Variable from training data
@@ -27,7 +28,8 @@ performance_test_ridge <- function(train_benchmark, train_new, lambda=0.03, k=5,
                     metric = "RMSE"  # error metric
                     # verbose = True # print steps
   )
-
+  print(ridgeFit_new$results)
+  print("start training with benchmark data...")
   # determine model for data set 2
   ridgeFit_benchmark <- train(y ~., 
                      data = train_benchmark, # exclude Id Variable from training data
@@ -38,6 +40,7 @@ performance_test_ridge <- function(train_benchmark, train_new, lambda=0.03, k=5,
                      metric = "RMSE"  # error metric
                      # verbose = True # print steps
   )
+  print(ridgeFit_new$results)
   # return results of both data sets
   return(list(ridgeFit_new$results,ridgeFit_benchmark$results))
 }
@@ -46,8 +49,8 @@ source("load_ames_data.R")
 source("utils/quick_preprocessing.R") # to perform the naive preprocessing step implemented in the beginning
 source("utils/performanceMetrics.R")  # to get performance metrics 
 # get preprocessed data
-train_new <- basic_preprocessing(X_com,y)$train
-train_benchmark <- naive_preprocessing(X_com,y)$train
+train_new <- basic_preprocessing(X_com,y,scaler = "gaussian")$train
+train_benchmark <- basic_preprocessing(X_com,y,scaler = "min_max")$train
 check_encoding <- performance_test_ridge(train_new=train_new ,train_benchmark=train_benchmark)
 # encoding is not significantly better
 
@@ -84,11 +87,11 @@ xgb_train <- function(train, y, xgbGrid,eta_fixed=0.025, nrounds_fixed=1000, k=5
     for(i in 1:nrow(xgbGrid)){
       # determine arbitrary xgboost parameters in a list
       xgb_paramters = list(                                              
-        eta = eta_fixed,                                            # learning rate                                                                
-        max.depth = treeSpecificGrid$max_depth[i],                  # max nodes of a tree                                                       
-        gamma = treeSpecificGrid$gamma[i],                          # minimal improvement per iteration
-        colsample_bytree = treeSpecificGrid$colsample_bytree[i],    # fraction of variable to consider per tree (similar to mtry in rf)
-        subsample = treeSpecificGrid$subsample[i],                  # fraction of the whole sample that the bootstrap sample should consist of 
+        eta = eta_fixed,                                  # learning rate                                                                
+        max.depth = xgbGrid$max_depth[i],                  # max nodes of a tree                                                       
+        gamma = xgbGrid$gamma[i],                          # minimal improvement per iteration
+        colsample_bytree = xgbGrid$colsample_bytree[i],    # fraction of variable to consider per tree (similar to mtry in rf)
+        subsample = xgbGrid$subsample[i],                  # fraction of the whole sample that the bootstrap sample should consist of 
         eval_metric = "rmse",                                       # error metric
         maximize = FALSE
       )
@@ -114,18 +117,21 @@ xgb_train <- function(train, y, xgbGrid,eta_fixed=0.025, nrounds_fixed=1000, k=5
 
 # function to test two different preprocession stategies against each other using xgboost
 performance_test_xgb <- function(train_benchmark, train_new, y, xgbGrid, eta_fixed=0.025, nrounds_fixed=1000, k=5, seeds = 123){
+  print("start training with the new data...")
   result_new <- xgb_train(train=train_new,y=y,xgbGrid=xgbGrid)
+  print("start training with the benchmark data...")
   result_benchmark <- xgb_train(train=train_benchmark,y=y,xgbGrid=xgbGrid)
   return(list(new_model = result_new, benchmark_model = result_benchmark))
 }
 
 # usage
 # get preprocessed data to run against each other
-train_benchmark <- naive_preprocessing(X_com,y)
-X_imputed <- read.csv("Data/ames_imputed_mice.csv")
-train_new <- preprocessing(X_imputed,y)
+train_benchmark <- basic_preprocessing(X_com,y, scaler="min_max")$train
+train_new <- basic_preprocessing(X_com,y, scaler = "gaussian")$train
 # get labels
 y <- train_benchmark$y
+train_new$y <- NULL
+train_benchmark$y <- NULL
 # specify grid 
 xgbGrid <-  expand.grid(max_depth = seq(4,10,2), 
                         gamma = 0, # gamma seems to be not be crucial (we do not tune it)
@@ -133,8 +139,8 @@ xgbGrid <-  expand.grid(max_depth = seq(4,10,2),
                         colsample_bytree = seq(0.85,0.85,0.15)
 )
 # run both data version against each other
-new_vs_bench <- performance_test_xgb(train_new=train_new[,-c(1,2,nrow(train_new))],
-                     train_benchmark=train_benchmark[,-c(1,2,nrow(train_benchmark))],
+new_vs_bench <- performance_test_xgb(train_new=train_new,
+                     train_benchmark=train_benchmark,
                      y=y, 
                      xgbGrid=xgbGrid
                      )

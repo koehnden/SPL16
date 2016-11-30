@@ -34,14 +34,15 @@ gaussian_scaling <- function(x){
 # output: scale feature matrix 
 #
 #
-scale_data <- function(X_no_outliers, scale_method = "min_max"){
+scale_data <- function(X_no_outliers, scale_method){
   if (scale_method == "min_max"){
     return(as.data.frame(lapply(X_no_outliers, min_max_scaling))[,-1]) # without id variable
-  } else {
+  } 
+  if (scale_method == "gaussian"){
     return(as.data.frame(lapply(X_no_outliers,gaussian_scaling))[,-1])
   }
 }
 
-
 #X_imputed <- read.csv("Data/ames_imputed_mice.csv")
 #X_scaled <- scale_data(X_imputed, scale_method = "gaussian")
+#X_scaled2 <- scale_data(X_imputed, scale_method = "min_max") 

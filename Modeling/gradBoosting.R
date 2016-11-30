@@ -12,19 +12,19 @@ source("load_ames_data.R")
 source("utils/quick_preprocessing.R") # to perform the naive preprocessing step implemented in the beginning
 source("utils/performanceMetrics.R")  # to get performance metrics 
 # get preprocessed data
-train <- naive_preprocessing(X_com,y)
+train <- basic_preprocessing(X_com,y)$train
 # set labels and exclude them from the training set
 y <- train$y
-train <- train[,-c(1,ncol(train))]
+train$y <- NULL
 
 # save result path (change according to experiment here: input date is from quick preprocessing function)
-result_path <- "Modeling/Results/xgboost/tree_specific/quick_preprocessing/xgb_treespecific_train"
+result_path <- "Modeling/Results/xgboost/tree_specific/basic_preprocessing/xgb_treespecific_train"
 
 ########## perform repeated nested cv
 # set cv parameter
 k_outer <- 10  # fold of the outer cv loop 
 k_inner <- 5   # folds on the inner cv loop
-kbest <- 5 
+kbest <- 10 
 
 # create Grid for GridSearch to tune hyperparameter 
 # Tree specific Parameters: maxnodes: longest path of a single tree (decreased performance)
@@ -34,9 +34,9 @@ kbest <- 5
 nrounds_fixed <- 1000 # number of trees: no need for tuning since early.stopping is possible 
 eta_fixed <- 0.025 # learning rate (fixed for now)
 treeSpecificGrid <-  expand.grid(max_depth = seq(4,10,2), 
-                                 gamma = 0, # gamma seems to be not be crucial (we do not tune it)
+                                 gamma = seq(0,6,2), # gamma seems to be not be crucial (we do not tune it)
                                  subsample = seq(0.2,0.8,0.2), 
-                                 colsample_bytree = seq(0.1,0.85,0.15)
+                                 colsample_bytree = seq(0.2,0.8,0.2)
                                  )
 # samplesize could be inspected as well
 numOfParameter <- ncol(treeSpecificGrid)  
@@ -53,8 +53,7 @@ parameter_names <- c("max_depth",
 ## Repetition outer loop
 # create empty vector/matrix to save best results
 rmse_temp <- matrix(0, nrow = k_inner, ncol = k_outer)
-kbest <- 5 # how many models to be run in the outer loop
-best_parameter <- matrix(0, nrow = k_inner, ncol = numOfParameter + 1) 
+best_parameter <- matrix(0, nrow = kbest, ncol = numOfParameter + 1) 
 colnames(best_parameter) <- c("rmse",parameter_names)
 result_list <- lapply(seq_len(k_outer), function(X) best_parameter)
 
@@ -71,7 +70,7 @@ for(k_1 in 1:k_outer){
   # convert for data into a format xgb.train can handle for the outer training
   dtrain_outer <- xgb.DMatrix(data = as.matrix(training_outer), label=y_training_outer)
   dvalidation_outer <- xgb.DMatrix(data = as.matrix(validation_outer), label=y_validation_outer)
-  watchlist_outer <- list(eval = dvalidation_outer, train = dtrain_inner)
+  watchlist_outer <- list(eval = dvalidation_outer, train = dtrain_outer)
   cat("\n")
   cat("start outer nested cv loop", k_1, "out of", k_outer)
   # draw random integers for the k-folds
@@ -92,6 +91,7 @@ for(k_1 in 1:k_outer){
     y_validation_inner <- y_training_outer[indexValidation_inner]
     
     # convert for data into a format xgb.train can handle
+    print(nrow(training_inner))
     dtrain_inner <- xgb.DMatrix(data = as.matrix(training_inner), label=y_training_inner)
     dvalidation_inner <- xgb.DMatrix(data = as.matrix(validation_inner), label=y_validation_inner)
     watchlist_inner <- list(eval = dvalidation_inner, train = dtrain_inner)
@@ -113,7 +113,7 @@ for(k_1 in 1:k_outer){
                           booster = "gbtree",
                           nround = nrounds_fixed,    #number of trees (set accordingly to tune_nrounds function) 
                           verbose = 1,
-                          early.stop.round = 25,
+                          early.stop.round = 50,
                           objective = "reg:linear",
                           watchlist = watchlist_inner
                           )
@@ -130,8 +130,9 @@ for(k_1 in 1:k_outer){
     # get rmse and the parameter of the best model
     best_results <- tuning_results[idx_kbest,]
     # save best results
-    rmse_temp[k_2,k_1] <- best_results$rmse[1] # best rmse
+    #rmse_temp[k_2,k_1] <- best_results$rmse[1] # best rmse
   }#end inner cv
+  print("3")
   # fill result list with the best parameter 
   result_list[[k_1]] <- best_results
   # start training with k-best parameter set using the outer training data
@@ -152,7 +153,7 @@ for(k_1 in 1:k_outer){
                               booster = "gbtree",
                               nround = nrounds_fixed,    # number of trees (set accordingly to tune_nrounds function) 
                               verbose = 1,
-                              early.stop.round = 25,     
+                              early.stop.round = 50,     
                               objective = "reg:linear",
                               watchlist = watchlist_outer
     )
@@ -171,3 +172,17 @@ for(i in 1:length(result_list)){
   # save all training results as csv file (fold_k_reptetion_t)
   write.csv(result_list[[i]], file = paste(result_path,i,"bestModels.csv", sep="_"))
 }
+
+results_outer <- rbind(result_list[[1]],result_list[[2]],result_list[[3]],result_list[[4]],result_list[[5]],
+      result_list[[6]],result_list[[7]],result_list[[8]],result_list[[9]],result_list[[10]])
+
+write.csv(results_outer, paste(result_path,"mergeBestResult.csv"))
+
+max_depth <- box_hyperparameter(results_outer, results_outer$max_depth,"Max Depth") 
+gamma <- box_hyperparameter(results_outer, results_outer$gamma,"Gamma")
+subsample <- box_hyperparameter(results_outer, results_outer$subsample,"Subsample")
+colbytree <- box_hyperparameter(results_outer, results_outer$colsample_bytree,"Column by Tree")
+multiplot(max_depth, gamma, subsample, colbytree, cols=2)
+
+
+
