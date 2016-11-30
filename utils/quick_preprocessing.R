@@ -1,5 +1,13 @@
 ############################ Function to applies quick preprocessing ######################################
 # load data set
+
+## Install and library packages that are needed.
+libraries = c('caret','elasticnet','Hmisc','dummies','usdm','randomForest','foreach','xgboost','Matrix','ggplot2','VIM','plotly')
+lapply(libraries, function(x) if (!(x %in% installed.packages())) {
+    install.packages(x)
+})
+lapply(libraries, library, quietly = TRUE, character.only = TRUE)
+
 source("load_ames_data.R")
 # apply quick preprocessing done in quick_imputation, cat_to_dummies and delete_nz_variables in one step
 # input: X_com - complete feature matrix with feature in train and test set (return by load_ames_data.R)

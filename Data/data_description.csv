@@ -43,7 +43,7 @@ HeatingQC, Heating quality and condition,0,comfort_heat,ordered factor
 HouseStyle, Style of dwelling,0,comfort_total,"factor, can be ordered or no"
 KitchenQual, Kitchen quality,0,comfort_kitchen,ordered factor
 LandContour, Flatness of the property,0,comfort_land,"factor, can be ordered or not"
-LandSlope, Slope of property,0,comfort_lang,"factor, can be ordered or not"
+LandSlope, Slope of property,0,comfort_land,"factor, can be ordered or not"
 LotArea, Lot size in square feet,0,size_lot,no need
 LotConfig, Lot configuration,0,comfort_lot,"factor, can be ordered or not"
 LotFrontage, Linear feet of street connected to property,259,comfort_lot,"numeric, do not know why NAs"
@@ -77,3 +77,5 @@ WoodDeckSF, Wood deck area in square feet,0,comfort_deck,"numeric, censored at 0
 YearBuilt, Original construction date,0,year_built,no need
 YearRemodAdd, Remodel date,0,year_modify,no need
 YrSold, Year Sold,0,year_sold,no need
+BedroomAbvGr,no description,0,comfort_bedroom,no need
+KitchenAbvGr,no description,0,comfort_kitchen,no need
