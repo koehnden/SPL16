@@ -1,7 +1,11 @@
 ### Script that includes all the library that need to be installed
 # Please add packages here if you use a new one
 
-libraries = c('caret','elasticnet','Hmisc','dummies','usdm','randomForest','foreach','xgboost','Matrix','ggplot2','VIM','plotly')
+libraries = c('caret','elasticnet','Hmisc',
+              'dummies','usdm','randomForest',
+              'foreach','xgboost','Matrix',
+              'ggplot2','VIM','plotly',
+              'corrgram')
 lapply(libraries, function(x) if (!(x %in% installed.packages())) {
     install.packages(x)
 })

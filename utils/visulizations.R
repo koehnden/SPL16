@@ -59,11 +59,13 @@ hyperparameter_heatmap <- function(results, parameter1, parameter2, name1, name2
 #p1 <- hyperparameter_heatmap(results_inner, results_inner$max_depth, results_inner$gamma, "Max Depth", "Gamma") 
 
 # TODO:correlation plot of all variables
-#library(corrplot)
-#correlations <- cor(na.omit(train_cont[,-1, with = FALSE]))
+cor_plot <- function(x, title){
+  corrgram(x, order = NULL, lower.panel = panel.shade,
+               upper.panel = panel.pie,
+               text.panel = panel.txt,
+               main = title)
+}
 
-# correlations
-#row_indic <- apply(correlations, 1, function(x) sum(x > 0.3 | x < -0.3) > 1)
 
 #correlations<- correlations[row_indic ,row_indic ]
 #corrplot(correlations, method="square")
