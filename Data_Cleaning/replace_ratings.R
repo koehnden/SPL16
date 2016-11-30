@@ -23,8 +23,7 @@ replace_standard_ratings <- function(x){
 }
 
 # replace basement ratings with numerical ratings
-x <- X_com$BsmtFinType1
-unifinish_dummy <- function(x){
+unifinish_dummy <- function(X_com){
   X_com$BsmtFinType1_unfinished <- ifelse(X_com$BsmtFinType1 == "Unf",1,0)
   X_com$BsmtFinType1_unfinished[is.na(X_com$BsmtFinType1_unfinished)] <- 0
   X_com$BsmtFinType2_unfinished <- ifelse(X_com$BsmtFinType2 == "Unf",1,0)

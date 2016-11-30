@@ -26,7 +26,6 @@ gaussian_scaling <- function(x){
     return(x)
   }
 }
-
 # this function scales the all numerical variable in the feature matrix
 # input: X-no_outliers - feature matrix without NAs and outliers
 #        scale_method - a string that determines the scaling method, if "min_max" then min_max_scaling function is applied

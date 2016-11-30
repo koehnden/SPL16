@@ -31,11 +31,11 @@ basic_preprocessing <- function(X_com,y, scaler = "gaussian"){
   source("outlier/impute_outliers.R")
   source("Data_Cleaning/scale_data.R")
   source("Feature_Selection/delete_nearzero_variables.R") # Put ouT X_com as the cleaned Feature Matrix
-  X_com <- replace_ratings(X_com)
-  X_imputed <- naive_imputation(X_com)
-  X_time_encoded <- include_quarter_dummies(X_imputed)
-  X_no_outlier <- data.frame(lapply(X_time_encoded, iqr_outlier))
-  X_scaled <- scale_data(X_no_outlier, scale_method = scaler)
+  X_ratings <- replace_ratings(X_com)
+  X_imputed <- naive_imputation(X_ratings)
+  X_no_outlier <- data.frame(lapply(X_imputed, iqr_outlier))
+  X_time_encoded <- include_quarter_dummies(X_no_outlier)
+  X_scaled <- scale_data(X_time_encoded, scale_method = scaler)
   X_encoded <- data.frame(lapply(X_scaled, cat_to_dummy))
   X_com <- delect_nz_variable(X_encoded)
   # remerge train data

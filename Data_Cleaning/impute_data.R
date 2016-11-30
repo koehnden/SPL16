@@ -35,8 +35,6 @@ median_mode_impute <- function(x) {
 # output: data.frame X with imputed NAs by either the mean or the mode
 naive_imputation <- function(X){
   temp <- X
-  # Four Variables namely "Allez", "PoolQC" ,"Fence", "MiscFeature" have over 2000 missings --> we drop them
-  temp <- temp[ , !names(temp) %in% c("Alley", "PoolQC" ,"Fence", "MiscFeature")] 
   # apply function on all variable using lappy 
   temp <- data.frame(temp, stringsAsFactors = FALSE)
   temp <- as.data.frame(lapply(temp, median_mode_impute)) 
