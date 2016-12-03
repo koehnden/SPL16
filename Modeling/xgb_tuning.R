@@ -11,14 +11,21 @@ library(Matrix)
 source("load_ames_data.R")
 source("utils/quick_preprocessing.R") # to perform the naive preprocessing step implemented in the beginning
 source("utils/performanceMetrics.R")  # to get performance metrics 
+
 # get preprocessed data
 train <- basic_preprocessing(X_com,y)$train
+test <-  basic_preprocessing(X_com,y)$test
+X_com <- rbind(train,test)
+
+
 # set labels and exclude them from the training set
 y <- train$y
+train <- train[,which(colnames(train) %in% importance_matrix$Feature[1:30])]
+test <-  test[,which(colnames(test) %in% importance_matrix$Feature[1:30])]
 train$y <- NULL
 
 # save result path (change according to experiment here: input date is from quick preprocessing function)
-result_path <- "Modeling/Results/xgboost/tree_specific/basic_preprocessing/xgb_treespecific_train"
+result_path <- "Modeling/Results/xgboost/tree_specific/vi_top_30/xgb_top_features"
 
 ########## perform repeated nested cv
 # set cv parameter
@@ -32,10 +39,10 @@ k_folds <- 5   # folds in the cv loop
 
 nrounds_fixed <- 1000 # number of trees: no need for tuning since early.stopping is possible 
 eta_fixed <- 0.025 # learning rate (fixed for now)
-treeSpecificGrid <-  expand.grid(max_depth = seq(4,12,2), 
+treeSpecificGrid <-  expand.grid(max_depth = seq(6,16,2), 
                                  gamma = seq(0,6,2), # gamma seems to be not be crucial (we do not tune it)
                                  subsample = seq(0.4,0.8,0.2), 
-                                 colsample_bytree = seq(0.4,0.8,0.2)
+                                 colsample_bytree = seq(0.6,1,0.2)
 )
 # samplesize could be inspected as well
 numOfParameter <- ncol(treeSpecificGrid)  
@@ -55,7 +62,7 @@ parameters <- matrix(0, nrow = nrow(treeSpecificGrid), ncol = numOfParameter + 1
 colnames(parameters) <- c("rmse",parameter_names)
 result_list <- lapply(seq_len(repetitions), function(X) parameters)
 
-# start nested cv loop
+# start repetition loop
 for(t in 1:repetitions){
   # draw random integers for the k-folds
   folds <- sample(rep(1:k_folds, length.out = nrow(train)))

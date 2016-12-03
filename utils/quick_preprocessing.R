@@ -30,7 +30,7 @@ basic_preprocessing <- function(X_com,y, scaler = "gaussian"){
   source("Data_Cleaning/encode_time_variables.R")
   source("outlier/impute_outliers.R")
   source("Data_Cleaning/scale_data.R")
-  source("Feature_Selection/delete_nearzero_variables.R") # Put ouT X_com as the cleaned Feature Matrix
+  source("Feature_Selection/delete_nearzero_variables.R") 
   X_ratings <- replace_ratings(X_com)
   X_imputed <- naive_imputation(X_ratings)
   X_no_outlier <- data.frame(lapply(X_imputed, iqr_outlier))
@@ -43,6 +43,18 @@ basic_preprocessing <- function(X_com,y, scaler = "gaussian"){
   train <- cbind(X_com[idx_train,],y)
   test <- X_com[-idx_train,]
   return(list(train=train,X_com=X_com, test=test)) # return without id 
+}
+
+pca_preprocessing <- function(X_com, y, contained_variance){
+  source("PCA/pca_basic.R")
+  X_basic <- basic_preprocessing(X_com,y)$X_com
+  X_pca <- pca(X_basic, contained_variance)
+  
+  # remerge train data
+  idx_train <- c(1:length(y))
+  train <- cbind(X_pca[idx_train,],y)
+  test <- X_pca[-idx_train,]
+  return(list(train=train,X_com=X_pca, test=test)) # return without id 
 }
 
 

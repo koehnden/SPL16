@@ -9,7 +9,7 @@ source("Feature_Selection/xgb_variable_importance.R") # takes less than 2min
 importance_ranking <- importance_matrix$Feature
 
 # function to perform wrapper feature selection using beackwards elimination with xgboost
-backwards_elimination <- function(train, y, importance_matrix, k_folds = 5, repetitions = 10){
+backwards_elimination <- function(train, y, importance_matrix, k_folds = 5, repetitions = 5){
   # get the feature ordered by their importance 
   importance_ranking <- importance_matrix$Feature
   train_subset <- train
@@ -40,7 +40,7 @@ backwards_elimination <- function(train, y, importance_matrix, k_folds = 5, repe
         # determine arbitrary xgboost parameters in a list
         xgb_paramters = list(                                              
           eta = 0.025,                    # learning rate                                                                
-          max.depth = 8,                  # max nodes of a tree                                                       
+          max.depth = 12,                  # max nodes of a tree                                                       
           gamma = 2,                      # minimal improvement per iteration
           colsample_bytree = 0.8,         # fraction of variable to consider per tree (similar to mtry in rf)
           subsample = 0.4,                # fraction of the whole sample that the bootstrap sample should consist of 
@@ -70,11 +70,10 @@ backwards_elimination <- function(train, y, importance_matrix, k_folds = 5, repe
     # check if results are improved by excluding the variable
     if(validation_results[i]  > validation_results[i+1]){
       # keep variable
-      train_subset[important_ranking[i]] <- train[important_ranking[i]]
+      train_subset[importance_ranking[i]] <- train[importance_ranking[i]]
     }
   }#end backwards elimination loop
   return(list(choosen_subset = train_subset, rmse_scores = validation_results))
 }
 # usage
-X_fs <- backwards_elimination(train,y,importance_matrix)
-
+wrapper_res <- backwards_elimination(train,y,importance_matrix)

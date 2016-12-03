@@ -7,7 +7,7 @@ library(data.table)
 source("utils/visulizations.R")
 
 # load all inner tuning results
-load_data <- function(wd="~/SPL16/Modeling/Results/xgboost/tree_specific/basic_preprocessing") { 
+load_data <- function(wd="~/SPL16/Modeling/Results/xgboost/tree_specific/vi_top_30") { 
   setwd(wd)
   files <- list.files()
   tables <- lapply(files, read.csv)
@@ -40,11 +40,11 @@ avg_rmse[avg == min(avg),X]
 avg_rmse[std == min(std),.(X,std)]
 # get the top ten percent parameter sets
 result_path <- "Modeling/Results/xgboost/tree_specific/tuning_plots/"
-all_avg_results <- cbind(avg_rmse, results[1:180,-c(1,2)])
+all_avg_results <- cbind(avg_rmse, results[1:216,-c(1,2)])
 all_avg_results <- all_avg_results[with(all_avg_results, order(avg)), ]
-write.csv(all_avg_results,paste(result_path,'sortedAvgResults.csv', sep = ""))
+write.csv(all_avg_results,paste(result_path,'sortedAvgResultsTop30.csv', sep = ""))
 
 
 top_ten_results <- all_avg_results[1:10,] 
-write.csv(top_ten_results,paste(result_path,'top_ten_results.csv', sep = ""))
+write.csv(top_ten_results,paste(result_path,'top_ten_resultsTop30.csv', sep = ""))
 
