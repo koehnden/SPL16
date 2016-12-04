@@ -29,5 +29,6 @@ rfe_gaussiabSVM <- rfe(x = train,
                        tuneGrid = svmGaussianGrid # grid
 )
 
-predictors(rfe_gaussiabSVM)
+feature_ranking <- predictors(rfe_gaussiabSVM)
+write.csv(feature_ranking, file = "Feature_Selection/svmRFEranking")
 ggplot(rfe_gaussiabSVM, type = c("g", "o"))
