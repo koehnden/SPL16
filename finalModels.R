@@ -100,7 +100,6 @@ yhat <- final_training_xgb(train, y, test, xgb_paramters)
 write.csv(yhat,"Modeling/Results/finalSubmission/xgb_pca2.csv", row.names = FALSE)
 # Kaggle Score: 0.15364
 
-
 ############################## Random Forest with H2o ####################################
 train_h2o <- as.h2o(training)
 validation_h2o <- as.h2o(validation)
@@ -117,5 +116,51 @@ rfFit <- h2o.randomForest(           # h2o.randomForest function
   nfolds = 3,
   stopping_metric = "MSE"
 )               
+
+
+###################### SVM with Gaussian Kernel ##########################################################
+final_training_gaussianSVM <- function(train, test, C = 4.5, sigma = 0.002){
+  # create Grid 
+  svmGaussianGrid <- expand.grid(C = C, sigma = sigma) 
+  # determine evaluation method of the cv loop 
+  ctrl <- trainControl(method = "none",
+                       savePredictions = TRUE
+  )
+  print("start training final training...")
+  # determine model 
+  Fit <- train(y ~., 
+               data = train, # exclude Id Variable from training data
+               method = 'svmRadial',  # method
+               trControl = ctrl,  # evaluatio method (repeated CV)
+               tuneGrid = svmGaussianGrid, # grid
+               metric = "RMSE"  # error metric
+                    # verbose = True # print steps
+  )
+  # predict label for the test set using the training parameters
+  yhat <- predict(Fit, test)
+  return(yhat)
+}
+
+## apply ridge regression
+source("load_ames_data.R")
+source("utils/quick_preprocessing.R") # to perform the naive preprocessing step implemented in the beginning
+source("utils/performanceMetrics.R")
+# get preprocessed data
+preprocessed_data <- basic_preprocessing(X_com,y)
+# train set
+train <- preprocessed_data$train
+# test set
+test <- preprocessed_data$test
+# get predictions
+yhat <- cbind(1461:2919,final_training_gaussianSVM(train,test))
+colnames(yhat) <- c("Id","SalePrice")
+
+
+write.csv(yhat,file = "Modeling/Results/finalSubmission/gaussianSVM.csv",row.names = FALSE)
+# best score so far 0.13..
+
+
+
+
 
 
