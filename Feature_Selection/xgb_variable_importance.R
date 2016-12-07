@@ -17,10 +17,10 @@ dtrain <- xgb.DMatrix(data = sapply(train, as.numeric), label=y)
 # determine arbitrary xgboost parameters in a list
 xgb_paramters = list(                                              
     eta = 0.025,                                  # learning rate                                                                
-    max.depth = 12,                  # max nodes of a tree                                                       
-    gamma = 2,                          # minimal improvement per iteration
+    max.depth = 16,                  # max nodes of a tree                                                       
+    gamma = 0,                          # minimal improvement per iteration
     colsample_bytree = 0.8,    # fraction of variable to consider per tree (similar to mtry in rf)
-    subsample = 0.4,                  # fraction of the whole sample that the bootstrap sample should consist of 
+    subsample = 0.6,                  # fraction of the whole sample that the bootstrap sample should consist of 
     eval_metric = "rmse",                                       # error metric
     maximize = FALSE
 )
@@ -35,10 +35,19 @@ xgbFit <- xgb.train(params = xgb_paramters,  # list of parameter previously spec
 
 #train$data@Dimnames[[2]] represents the column names of the sparse matrix.
 importance_matrix <- xgb.importance(colnames(train), model = xgbFit)
-xgb.plot.importance(importance_matrix)
 write.csv(importance_matrix, "Features_Selection/variable_importance_basic.csv")
 
+### customized vimp_plot
+library(ggplot2)
+ranked_variables <- importance_matrix$Feature
+importance_per <- importance_matrix$Gain
+var_imp <- data.frame(ranked_variables,importance_per)[1:30,]
+p <- ggplot(var_imp, aes(x=reorder(ranked_variables, importance_per), weight=importance_per, fill=ranked_variables))
+p <- p + geom_bar(aes(weights=importance_per)) +
+  ggtitle("Variable Importance from Gradient Boosting Fit") + theme(legend.position="none") + coord_flip()
+print(p)
 
+# plot
 retained_variables <- 1:nrow(importance_matrix)
 variance_level <- cumsum(importance_matrix$Gain)
 retained <- data.frame(variance_level,retained_variables)
@@ -46,4 +55,3 @@ p <- ggplot(data = retained, mapping = aes(retained_variables,variance_level))
 p <- p + geom_line() + geom_point()
 p <- p + ggtitle("Retained Variables vs. Cumsum VI") + xlab("# Variables") + ylab("Cumsum of VI")
 print(p)
-
