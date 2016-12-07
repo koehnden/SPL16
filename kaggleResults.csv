@@ -1,4 +1,4 @@
-﻿ Method,SVR-RBF,Random Forest,Gradient Boosting
-All Variables,0.13079,0.14836,
-Feature Selection,0.13229,0.15154,0.14364
-PCA,,0.14836,0.15364
+ Method	SVR-RBF	Random Forest	Gradient Boosting
+All Variables	0.13079	0.14836	0.13745
+Feature Selection	0.13229	0.15154	0.14364
+PCA	0.16066	0.14836	0.15364
