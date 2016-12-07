@@ -20,16 +20,14 @@ X_com <- rbind(train,test)
 
 # set labels and exclude them from the training set
 y <- train$y
-train <- train[,which(colnames(train) %in% importance_matrix$Feature[1:30])]
-test <-  test[,which(colnames(test) %in% importance_matrix$Feature[1:30])]
 train$y <- NULL
 
 # save result path (change according to experiment here: input date is from quick preprocessing function)
-result_path <- "Modeling/Results/xgboost/tree_specific/vi_top_30/xgb_top_features"
+result_path <- "Modeling/Results/xgboost/tree_specific/basic_preprocessing/xgb_basic"
 
 ########## perform repeated nested cv
 # set cv parameter
-repetitions <- 10  # repetitions of cv 
+repetitions <- 5  # repetitions of cv 
 k_folds <- 5   # folds in the cv loop
 
 # create Grid for GridSearch to tune hyperparameter 
@@ -39,7 +37,7 @@ k_folds <- 5   # folds in the cv loop
 
 nrounds_fixed <- 1000 # number of trees: no need for tuning since early.stopping is possible 
 eta_fixed <- 0.025 # learning rate (fixed for now)
-treeSpecificGrid <-  expand.grid(max_depth = seq(6,16,2), 
+treeSpecificGrid <-  expand.grid(max_depth = seq(10,16,2), 
                                  gamma = seq(0,6,2), # gamma seems to be not be crucial (we do not tune it)
                                  subsample = seq(0.4,0.8,0.2), 
                                  colsample_bytree = seq(0.6,1,0.2)

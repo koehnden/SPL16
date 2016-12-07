@@ -42,9 +42,9 @@ avg_rmse[std == min(std),.(X,std)]
 result_path <- "Modeling/Results/xgboost/tree_specific/tuning_plots/"
 all_avg_results <- cbind(avg_rmse, results[1:216,-c(1,2)])
 all_avg_results <- all_avg_results[with(all_avg_results, order(avg)), ]
-write.csv(all_avg_results,paste(result_path,'sortedAvgResultsTop30.csv', sep = ""))
+write.csv(all_avg_results,paste(result_path,'sortedAvgResults.csv', sep = ""))
 
 
 top_ten_results <- all_avg_results[1:10,] 
-write.csv(top_ten_results,paste(result_path,'top_ten_resultsTop30.csv', sep = ""))
+write.csv(top_ten_results,paste(result_path,'top_ten_results.csv', sep = ""))
 
