@@ -40,10 +40,11 @@ ranked_variables <- rfFit@model$variable_importances$variable
 importance_per <- rfFit@model$variable_importances$percentage
 var_imp <- data.frame(ranked_variables,importance_per)[1:30,]
 p <- ggplot(var_imp, aes(x=reorder(ranked_variables, importance_per), weight=importance_per, fill=ranked_variables))
-p <- p + geom_bar(aes(weights=importance_per)) +
+p <- p + geom_bar(aes(weights=importance_per)) + xlab("Importance Score") + ylab("Variables") +
   ggtitle("Variable Importance from Random Forest Fit") + theme(legend.position="none") + coord_flip()
 print(p)
 
+# plot retained variable vs. cumsum variable importance
 retained_variables <- 1:nrow(var_imp)
 variance_level <- cumsum(importance_per)
 retained <- data.frame(variance_level,retained_variables)

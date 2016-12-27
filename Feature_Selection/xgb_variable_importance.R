@@ -43,11 +43,11 @@ ranked_variables <- importance_matrix$Feature
 importance_per <- importance_matrix$Gain
 var_imp <- data.frame(ranked_variables,importance_per)[1:30,]
 p <- ggplot(var_imp, aes(x=reorder(ranked_variables, importance_per), weight=importance_per, fill=ranked_variables))
-p <- p + geom_bar(aes(weights=importance_per)) +
+p <- p + geom_bar(aes(weights=importance_per)) + xlab("Importance Score") + ylab("Variables") +
   ggtitle("Variable Importance from Gradient Boosting Fit") + theme(legend.position="none") + coord_flip()
 print(p)
 
-# plot
+# plot retained variable vs. cumsum variable importance
 retained_variables <- 1:nrow(importance_matrix)
 variance_level <- cumsum(importance_matrix$Gain)
 retained <- data.frame(variance_level,retained_variables)
