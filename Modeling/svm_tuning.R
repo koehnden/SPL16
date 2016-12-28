@@ -34,6 +34,7 @@ svmLinearFit <- train(x = train,
                   metric = "RMSE",  # error metric
                   maximize = FALSE
 )
+plot(svmLinearFit)
 
 # SVM with Gaussian Kernel
 svmGaussianFit <- train(x = train,
@@ -44,3 +45,4 @@ svmGaussianFit <- train(x = train,
                       metric = "RMSE",  # error metric
                       maximize = FALSE
 )
+plot(svmGaussianFit)
