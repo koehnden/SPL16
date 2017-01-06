@@ -27,7 +27,7 @@ xgbFit = xgb.train(params = xgb_paramters, data = dtrain, booster = "gbtree", nr
     objective = "reg:linear")
 importance_matrix = xgb.importance(colnames(train), model = xgbFit)
 
-### customized vimp_plot
+### customized variable importance plot
 ranked_variables = importance_matrix$Feature
 importance_per = importance_matrix$Gain
 var_imp = data.frame(ranked_variables, importance_per)[1:20, ]

@@ -19,14 +19,14 @@ train$y = NULL
 
 # set cv parameter
 t = 10  # repetition on inner loop (here caret does it)
-k = 5  # folds on the inner cv loop
+k = 5   # folds on the inner cv loop
 
 # create Grid for GridSearch to tune hyperparameter
 svmLinearGrid = expand.grid(C = c(0.001, 0.01, 0.1, 1))
 svmGaussianGrid = expand.grid(C = c(0.001, 0.01, 0.1, 1), sigma = c(0.001, 0.01, 0.1, 1))
 
 # determine evaluation method of the inner cv loop
-ctrl = trainControl(method = "repeatedcv", number = t, repeats = k, verboseIter = FALSE)
+ctrl = trainControl(method = "repeatedcv", number = t, repeats = k, verboseIter = TRUE)
 
 # SVM with linear kernel
 svmLinearFit = train(x = train, y = y, method = "svmLinear", trControl = ctrl, tuneGrid = svmLinearGrid, 

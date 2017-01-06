@@ -17,9 +17,10 @@ lapply(c(libraries, "h2o"), library, quietly = TRUE, character.only = TRUE)
 load("basic_processing.RData")
 train = basic_data$train
 
-### model preparing
+### invoking the java virtual machine
 localH2O = h2o.init(nthreads = -1)
 h2o.clusterInfo(localH2O)
+# convert training set into a h2o object
 train_h2o = as.h2o(train)
 # sepecify columns of inputs and labels
 col_label = which(colnames(train) == "y")
@@ -33,7 +34,7 @@ rfFit = h2o.randomForest(training_frame = train_h2o, x = col_input, y = col_labe
 h2o.varimp_plot(rfFit)
 h2o.shutdown()
 
-### customized vimp_plot
+### customized variable importance plot using ggplot2
 ranked_variables = rfFit@model$variable_importances$variable
 importance_per = rfFit@model$variable_importances$percentage
 var_imp = data.frame(ranked_variables, importance_per)[1:20, ]
@@ -41,8 +42,4 @@ p = ggplot(var_imp, aes(x = reorder(ranked_variables, importance_per), weight = 
     fill = ranked_variables))
 p = p + geom_bar(aes(weights = importance_per)) + ggtitle("Variable Importance from Random Forest Fit") + 
     theme(legend.position = "none") + coord_flip() + xlab("")
-p
-
-
-
-
+print(p)

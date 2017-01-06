@@ -9,7 +9,7 @@ graphics.off()
 library(h2o)
 load("basic_processing.RData")
 
-## Create an H2O cloud
+## Create an H2O cloud (invoke java virtual machine)
 h2o.init(nthreads = -1, max_mem_size = "2G")
 h2o.removeAll()  # Clean slate - just in case the cluster was already running
 
@@ -47,7 +47,8 @@ for (t in 1:repetitions) {
 
 h2o.shutdown()
 
-### show some plots
+### show some plots 
+#TODO: add axis labels of the plot!!!
 par(mfrow = c(1, 2))
 plotRMSE = function(x, seed) {
     aa = x@summary_table$rmse
@@ -61,4 +62,3 @@ plotRMSE = function(x, seed) {
 mapply(plotRMSE, tuning_results, seeds)
 ### the parameter set that is choosen is: max_depth = 25, mtries = 25, ntrees = 500, sample_rate
 ### = 0.8.
-
