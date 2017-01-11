@@ -1,4 +1,4 @@
-Name of Quantlet: svm_tuning
+Name of Quantlet: svmTuning
 Published in: Statistic Programming Language
 Description: 'Tune parameters for the support vector machine using corss validation. The optimal parameter will be used to foreast house price.'
 Keywords: SVM, support vector machine, cross-validation, cv, plot, error, model, parameter

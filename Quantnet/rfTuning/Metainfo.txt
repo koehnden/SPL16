@@ -1,4 +1,4 @@
-Name of Quantlet: random_forest_tuning
+Name of Quantlet: rfTuning
 Published in: Statistic Programming Language
 Description: 'Tune parameters for the random forest model using corss validation. The optimal parameter will be used to foreast house price.'
 Keywords: random-forest, cross-validation, cv, plot, error, model, parameter

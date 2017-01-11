@@ -1,7 +1,7 @@
 ### this is file is used to format the code with 'formatR' package, 
 ### and also check the 'Mateinfo.txt' file using 'yamldebugger' package
 rm(list = ls())
-wd = 'F:/PHD/IRTG/courses/SPL/Quantlet'
+wd = 'F:/PHD/IRTG/courses/SPL/Quantnet'
 setwd(wd)
 
 ############################ check the metainfo file #####################

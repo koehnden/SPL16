@@ -1,4 +1,4 @@
-Name of Quantlet: xgb_tuning
+Name of Quantlet: xgbTuning
 Published in: Statistic Programming Language
 Description: 'Tune parameters for the xgboosting model using corss validation. The optimal parameter will be used to foreast house price.'
 Keywords: xgboosting, cross-validation, cv, plot, error, model, parameter

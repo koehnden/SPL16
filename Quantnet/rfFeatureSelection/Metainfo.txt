@@ -1,4 +1,4 @@
-Name of Quantlet: random_forest_feature_selection
+Name of Quantlet: rfFeatureSelection
 Published in: Statistic Programming Language
 Description: 'Select variables to forcast the house price using random forest method, with the parameter taken from the tuning result.'
 Keywords: random-forest, variable selection, plot, forecast, bar chart, error
