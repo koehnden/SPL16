@@ -1,6 +1,6 @@
 ############################ Tuning Random Forrest using H20 ###################################
 
-### setwd('F:/PHD/IRTG/courses/SPL/Quantlet/random_forest_turning')
+### setwd('F:/PHD/IRTG/courses/SPL/Quantnet/rfTuning')
 rm(list = ls())
 graphics.off()
 ######### if package 'h2o' is not installed before, run the following code ############
@@ -39,13 +39,21 @@ tuning_results = list()
 for (t in 1:repetitions) {
     # tune random forest with h2o
     rfFit[[t]] = h2o.grid("randomForest", grid_id = "gridSearch", x = col_input, y = col_label, 
-        training_frame = train_h2o, hyper_params = rfGrid, nfolds = k_folds, is_supervised = TRUE, 
-        seed = seeds[1])
+    training_frame = train_h2o, hyper_params = rfGrid, nfolds = k_folds, is_supervised = TRUE, 
+    seed = seeds[1])
     # get tuning results and save them as csv
     tuning_results[[t]] = h2o.getGrid(grid_id = "gridSearch", sort_by = "rmse")
 }
 
 h2o.shutdown()
+
+### save results
+res_save = function(x, seed) {
+    aa = x@summary_table
+    path = paste('output/tuning_result_seed_', seed, '.csv', sep = '')
+    write.csv(aa, path, row.names = F)
+}
+mapply(res_save, tuning_results, seeds)
 
 ### show some plots 
 #TODO: add axis labels of the plot!!!
@@ -55,7 +63,7 @@ plotRMSE = function(x, seed) {
     index = seq_along(aa)
     min_aa = min(aa)
     index_min = index[aa == min(aa)][1]
-    plot(index, aa, main = paste0("RMSE when seed = ", seed), xlab = "", ylab = "", pch = 20, 
+    plot(index, aa, main = paste0("RMSE when seed = ", seed), xlab = "parameter set", ylab = "RMSE", pch = 20, 
         col = "grey50")
     points(index_min, min_aa, pch = 20, col = "red")
 }

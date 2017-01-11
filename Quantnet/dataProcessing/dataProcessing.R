@@ -38,13 +38,13 @@ X_com = rbind(X, test)
 # apply preprocessing
 basic_data = basic_preprocessing(X_com, y)
 # get the complete input matrix
-X_com <- basic_data$X_com
+X_com = basic_data$X_com
 write.csv(X_com, "inputMatrix_preprocessed.csv")
 # get the training data with labels
-train <- basic_data$train
+train = basic_data$train
 write.csv(train,"train_preprocessed.csv")
 # get the test data to be predicted in the same format
-test <- basic_data$test
+test = basic_data$test
 write.csv(train,"test_preprocessed.csv")
 
 # remove redundant variables and functions
