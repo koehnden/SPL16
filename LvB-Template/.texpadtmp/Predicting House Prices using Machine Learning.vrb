@@ -1,0 +1,14 @@
+\frametitle{Optimizing Hyper-parameters}
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[scale=0.43]{Figures/OHP.jpg}
+%	\caption{Workflow of Pre-Processing Steps}
+%	\label{fig:DataPipeline}
+	\end{center}
+\end{figure}
+
+
+\quantnet \href{https://github.com/koehnden/SPL16/tree/master/Quantnet/xgbTuning/}{xgbTuning}
+\quantnet \href{https://github.com/koehnden/SPL16/tree/master/Quantnet/rfTuning/}{rfTuning}
+\quantnet \href{https://github.com/koehnden/SPL16/tree/master/Quantnet/svmTuning}{svmTuning}
