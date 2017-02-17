@@ -1,9 +1,0 @@
-Name of Quantlet: dataProcessing
-Published in: Statistic Programming Language
-Description: 'Process the raw data for further analysis, including impute NA values, convert category variables into numeric.'
-Keywords: data adjustment, scaling, price, origin, vif, function
-Author: Dennis Koehn, Linxi Wang, Mingyang Li
-Submitted: Sun, January 8, 2016 by Mingyang Li
-Datafile: 'ames_test.csv, ames_train.csv'
-Output: basic_processing.RData
-
