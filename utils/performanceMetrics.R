@@ -5,7 +5,7 @@
 #        yhat - predicted label by the model --> output of predict(modelFit, newdata = validation))
 # output - Mean Squared Error
 mse <- function(y,yhat){
-  return(sum(y - yhat)^2/length(y))
+  return(sum(yhat - y)^2/length(y))
 }
 
 # calculates normal rmse

@@ -17,13 +17,15 @@ price_per_factor_box <- function(factor, factor_name){
 # usage example: boxplot of SalePrice by MSZoning 
 #price_per_factor_box(train$MSZoning, "MSZoning")
 
-price_per_factor_plot <- function(factor, factor_name){
+price_per_factor_plot <- function(factor, factor_name, smooth=TRUE){
   sold_per_x <- data.frame(factor,train$SalePrice)
   colnames(sold_per_x) <- c(factor_name,"SalePrice")
   # create scatterplot
   p <- ggplot(sold_per_x) + geom_point(aes(x=factor, y=SalePrice))
   # add mean and confidence intervall
-  p <- p + geom_smooth(aes(factor))
+  if(smooth == TRUE){
+    p <- p + geom_smooth(aes(factor)) 
+  }
   # add title
   p <- p + ggtitle(paste(factor_name,"SalePrice", sep=" vs. ")) + xlab(factor_name)
   return(p)
@@ -35,7 +37,7 @@ price_per_factor_plot <- function(factor, factor_name){
 box_hyperparameter <- function(results, parameter, parameter_name){
   grid <- sort(unique(parameter))
   # create boxplot
-  p <- ggplot(results) + geom_boxplot(aes(x=parameter, y=rmse, group=parameter, fill=parameter))
+  p <- ggplot(results) + geom_boxplot(aes(x=parameter, y=rmse, group=parameter, fill=parameter), stat="identity")
   # add title
   p <- p + ggtitle(paste(parameter_name,"RMSE of log y", sep=" vs. ")) 
   # add colours

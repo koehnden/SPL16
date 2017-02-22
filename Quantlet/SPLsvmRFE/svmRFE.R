@@ -1,6 +1,4 @@
 ########################### SMV feature selection #########################
-
-### setwd('F:/PHD/IRTG/courses/SPL/Quantlet/svmRFE')
 rm(list = ls())
 graphics.off()
 
@@ -16,15 +14,17 @@ train = basic_data$train
 y = train$y
 train$y = NULL
 
-# set cv parameter
 k = 5  # folds on the cv loop
 
-subsets = 30:99
+subsets = 30:99 # subset to be evaluated
+
+# specify model parameters
 svmGaussianGrid = expand.grid(C = 4.5, sigma = 0.002)
-ctrl = rfeControl(functions = caretFuncs, method = "cv", number = k, returnResamp = "final", verbose = TRUE)
-
-rfe_gaussiabSVM = rfe(x = train, y = y, sizes = subsets, rfeControl = ctrl, method = "svmRadial", 
+# specify rfe options
+ctrl = rfeControl(functions = caretFuncs, method = "cv", number = k, verbose = TRUE)
+# perform actual varaible selection
+rfe_gaussianSVM = rfe(x = train, y = y, sizes = subsets, rfeControl = ctrl, method = "svmRadial", 
     metric = "RMSE", tuneGrid = svmGaussianGrid)
-
-feature_ranking = predictors(rfe_gaussiabSVM)
-ggplot(rfe_gaussiabSVM, type = c("g", "o"))
+# get varaible ranking and plot it
+feature_ranking = predictors(rfe_gaussianSVM)
+ggplot(rfe_gaussianSVM, type = c("g", "o"))
